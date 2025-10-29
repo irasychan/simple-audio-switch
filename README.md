@@ -17,7 +17,7 @@ A tiny Windows command‑line tool to list, get, and set the default playback (o
 You can build with CMake from a Developer Command Prompt for VS (or any environment where cl.exe is available):
 
 ```cmd
-cd D:\workspace\projects\simple-audio-switch
+cd path\to\simple-audio-switch
 cmake -S . -B build -G "Visual Studio 17 2022" -A x64
 cmake --build build --config Release
 ```
