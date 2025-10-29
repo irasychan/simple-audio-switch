@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [ main, master ]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+  push:
+    branches: [ main, master ]
+    paths-ignore:
+      - '**/*.md'
+      - 'LICENSE'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  windows-build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure CMake (VS 2022, x64)
+        shell: pwsh
+        run: |
+          cmake -S . -B build -G "Visual Studio 17 2022" -A x64
+
+      - name: Build (Release)
+        shell: pwsh
+        run: |
+          cmake --build build --config Release
+
+      - name: Upload executable artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SimpleAudioSwitch-windows-x64
+          path: build/Release/SimpleAudioSwitch.exe
+          if-no-files-found: error
+          retention-days: 7
+
